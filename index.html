@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newton's Law of Cooling — Virtual Physics Lab</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- KaTeX for Math Equations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <!-- Sticky Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand"><i class="fa-solid fa-atom"></i><span>Physics V-Lab</span></a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#theory">Theory</a></li>
+                <li><a href="#procedure">Procedure</a></li>
+                <li><a href="#apparatus">Apparatus</a></li>
+                <li><a href="#simulator">Simulator</a></li>
+                <li><a href="#observation">Observation</a></li>
+                <li><a href="#graph">Graph</a></li>
+                <li><a href="#calculation">Calculation</a></li>
+                <li><a href="#result">Result</a></li>
+                <li><a href="#precautions">Precautions</a></li>
+                <li><a href="#viva">Viva</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="header-section" id="header">
+        <div class="header-container">
+            <span class="badge-tag"><i class="fa-solid fa-flask-vial"></i> INTERACTIVE PHYSICS EXPERIMENT</span>
+            <h1>NEWTON'S LAW OF COOLING</h1>
+            <p class="subtitle">Heat & Thermodynamics — Physical Sciences Virtual Laboratory</p>
+            <div class="header-meta">
+                <span><i class="fa-solid fa-graduation-cap"></i> University Level Virtual Lab</span>
+                <span><i class="fa-solid fa-shield-halved"></i> Academic Edition</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <!-- THEORY SECTION -->
+        <section id="theory" class="lab-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-book-open"></i> Theory</h2>
+                <p>Fundamental principles governing thermal energy dissipation</p>
+            </div>
+            <div class="card">
+                <p class="lead-text">
+                    "The rate of loss of heat of a body is directly proportional to the difference between the temperature of the body and the temperature of the surroundings, provided the temperature difference is small."
+                </p>
+                <div class="math-block-container">
+                    <p>Differential form:</p>
+                    <div id="math-diff" class="math-eq"></div>
+                    <p>Integrated form:</p>
+                    <div id="math-int" class="math-eq"></div>
+                </div>
+                <div class="theory-grid">
+                    <div class="theory-item">
+                        <h4><i class="fa-solid fa-circle-info"></i> Variable Definitions</h4>
+                        <ul>
+                            <li><strong>$T$</strong> = temperature of body at time $t$ (°C)</li>
+                            <li><strong>$T_0$</strong> = initial temperature of body (°C)</li>
+                            <li><strong>$T_s$</strong> = surrounding/ambient temperature (°C)</li>
+                            <li><strong>$k$</strong> = cooling constant (min⁻¹)</li>
+                            <li><strong>$t$</strong> = elapsed time (minutes)</li>
+                        </ul>
+                    </div>
+                    <div class="theory-item">
+                        <h4><i class="fa-solid fa-lightbulb"></i> Physical Behavior</h4>
+                        <p>Initially, cooling is faster due to a high thermal gradient. As the temperature of the body approaches room temperature, cooling slows down asymptotically, eventually reaching equilibrium with the surroundings ($T \to T_s$).</p>
+                    </div>
+                </div>
+                <div class="read-more-container">
+                    <button class="btn btn-outline" id="readMoreBtn"><i class="fa-solid fa-chevron-down"></i> Read More Background</button>
+                    <div class="read-more-content" id="readMoreContent" style="display: none;">
+                        <p>Newton's Law of Cooling is a simplified mathematical consequence of Fourier's Law of thermal conduction and Newton's law of convective heat transfer. It assumes that the heat transfer coefficient is uniform across the surface and that the internal thermal resistance of the body is negligible compared to the boundary layer thermal resistance (low Biot number condition).</p>
+                        <p>In real laboratory conditions, radiation losses governed by the Stefan-Boltzmann law also contribute at higher temperatures, but for small temperature excesses above ambient, the linear approximation holds remarkably well.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROCEDURE SECTION -->
+        <section id="procedure" class="lab-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-list-check"></i> Procedure</h2>
+                <p>Step-by-step instructions to perform the simulation experiment</p>
+            </div>
+            <div class="procedure-timeline">
+                <div class="step-card"><span class="step-num">1</span><p>Select a material/liquid from the available options.</p></div>
+                <div class="step-card"><span class="step-num">2</span><p>Set the desired surrounding (ambient) temperature.</p></div>
+                <div class="step-card"><span class="step-num">3</span><p>Set your target initial temperature.</p></div>
+                <div class="step-card"><span class="step-num">4</span><p>Click <strong>HEAT</strong> to heat the selected sample up to the initial temperature.</p></div>
+                <div class="step-card"><span class="step-num">5</span><p>Wait until heating completes automatically and the prompt appears.</p></div>
+                <div class="step-card"><span class="step-num">6</span><p>Select your preferred recording time interval (default is 2 minutes).</p></div>
+                <div class="step-card"><span class="step-num">7</span><p>Click <strong>START EXPERIMENT</strong> to begin automatic cooling data capture.</p></div>
+                <div class="step-card"><span class="step-num">8</span><p>Monitor real-time readings added automatically to the observation table.</p></div>
+                <div class="step-card"><span class="step-num">9</span><p>Observe the plotted temperature vs time curve on the dynamic graph.</p></div>
+                <div class="step-card"><span class="step-num">10</span><p>Use the <strong>AUTO-FILL</strong> feature in the calculation section to determine $k$.</p></div>
+                <div class="step-card"><span class="step-num">11</span><p>Review the final result report, export CSV data, or print the report.</p></div>
+            </div>
+        </section>
+
+        <!-- APPARATUS / MATERIALS SECTION -->
+        <section id="apparatus" class="lab-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-microscope"></i> Apparatus & Materials</h2>
+                <p>Interactive equipment and sample selection for the virtual workbench</p>
+            </div>
+            <div class="card">
+                <div class="apparatus-showcase">
+                    <div class="apparatus-visual">
+                        <svg viewBox="0 0 200 220" class="lab-svg-icon" aria-hidden="true">
+                            <!-- Beaker Glass Outline -->
+                            <path d="M50 30 L50 180 Q50 200 70 200 L130 200 Q150 200 150 180 L150 30 Z" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <ellipse cx="100" cy="30" rx="50" ry="10" fill="none" stroke="#2563eb" stroke-width="4"/>
+                            <!-- Liquid fill -->
+                            <path id="svgBeakerLiquid" d="M52 80 L52 180 Q52 198 70 198 L130 198 Q148 198 148 180 L148 80 Z" fill="rgba(59, 130, 246, 0.3)"/>
+                            <!-- Thermometer -->
+                            <rect x="94" y="20" width="12" height="150" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="3"/>
+                            <circle cx="100" cy="180" r="10" fill="#ef4444"/>
+                            <rect id="svgThermoFluid" x="97" y="70" width="6" height="110" rx="3" fill="#ef4444"/>
+                            <!-- Heating element glow -->
+                            <path id="svgHeatingCoil" d="M60 205 Q100 215 140 205" fill="none" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+                        </svg>
+                        <p class="apparatus-caption">Calibrated Calorimeter & Liquid Sample</p>
+                    </div>
+                    <div class="apparatus-controls-desc">
+                        <h3>Select Test Sample</h3>
+                        <p>Different materials exhibit unique specific heat capacities and cooling rates ($k$). Choose a sample below to load its characteristic simulation parameters:</p>
+                        <div class="material-buttons" id="materialButtons">
+                            <button class="mat-btn active" data-material="water"><i class="fa-solid fa-droplet"></i> Water</button>
+                            <button class="mat-btn" data-material="oil"><i class="fa-solid fa-oil-well"></i> Oil</button>
+                            <button class="mat-btn" data-material="alcohol"><i class="fa-solid fa-flask"></i> Alcohol</button>
+                            <button class="mat-btn" data-material="copper"><i class="fa-solid fa-cube"></i> Copper Calorimeter</button>
+                            <button class="mat-btn" data-material="aluminium"><i class="fa-solid fa-square"></i> Aluminium Block</button>
+                            <button class="mat-btn" data-material="iron"><i class="fa-solid fa-shield"></i> Iron Sample</button>
+                        </div>
+                        <div class="disclaimer-note">
+                            <i class="fa-solid fa-circle-exclamation"></i> Note: Simulation values are illustrative and intended for educational demonstration.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MAIN SIMULATOR SECTION -->
+        <section id="simulator" class="lab-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-laptop-code"></i> Virtual Laboratory Simulator</h2>
+                <p>Perform the experiment in real-time with responsive controls and visualizations</p>
+            </div>
+            
+            <div class="simulator-layout">
+                <!-- LEFT SIDE: Virtual Apparatus -->
+                <div class="sim-left-panel card">
+                    <h3>Workbench Setup</h3>
+                    <div class="virtual-rig">
+                        <div class="rig-status-banner" id="rigStatusBanner">Status: Ready to Heat</div>
+                        <div class="rig-graphics">
+                            <div class="heat-source-flame" id="heatFlame"></div>
+                            <div class="glass-container-sim">
+                                <div class="liquid-fill-sim" id="liquidFillSim"></div>
+                                <div class="immersed-thermometer">
+                                    <div class="thermo-stem">
+                                        <div class="thermo-mercury" id="thermoMercury"></div>
+                                    </div>
+                                    <div class="thermo-bulb"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rig-readout-badge">
+                            <span id="rigTempDisplay">25.0 °C</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDE: Controls & Measurements -->
+                <div class="sim-right-panel card">
+                    <h3>Experiment Controls & Measurements</h3>
+                    
+                    <div class="controls-grid">
+                        <div class="control-group">
+                            <label for="materialSelect">Selected Material:</label>
+                            <select id="materialSelect" class="form-control">
+                                <option value="water">Water (k = 0.035 min⁻¹)</option>
+                                <option value="oil">Oil (k = 0.025 min⁻¹)</option>
+                                <option value="alcohol">Alcohol (k = 0.045 min⁻¹)</option>
+                                <option value="copper">Copper (k = 0.055 min⁻¹)</option>
+                                <option value="aluminium">Aluminium (k = 0.050 min⁻¹)</option>
+                                <option value="iron">Iron (k = 0.040 min⁻¹)</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="initialTempInput">Initial Temp ($T_0$): <span id="valT0">85</span> °C</label>
+                            <input type="range" id="initialTempInput" min="60" max="95" value="85" step="1" class="form-range">
+                        </div>
+
+                        <div class="control-group">
+                            <label for="ambientTempInput">Ambient Temp ($T_s$): <span id="valTs">25</span> °C</label>
+                            <input type="range" id="ambientTempInput" min="15" max="35" value="25" step="1" class="form-range">
+                        </div>
+
+                        <div class="control-group">
+                            <label for="intervalSelect">Recording Interval:</label>
+                            <select id="intervalSelect" class="form-control">
+                                <option value="1">1 minute</option>
+                                <option value="2" selected>2 minutes</option>
+                                <option value="3">3 minutes</option>
+                                <option value="5">5 minutes</option>
+                                <option value="10">10 minutes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="measurements-display-box">
+                        <div class="m-item">
+                            <span class="m-label">Elapsed Time</span>
+                            <span class="m-value" id="dispTime">00:00</span>
+                        </div>
+                        <div class="m-item">
+                            <span class="m-label">Current Temp</span>
+                            <span class="m-value" id="dispTemp">25.0 °C</span>
+                        </div>
+                        <div class="m-item">
+                            <span class="m-label">Ambient Temp</span>
+                            <span class="m-value" id="dispAmbient">25.0 °C</span>
+                        </div>
+                        <div class="m-item">
+                            <span class="m-label">Temp Difference</span>
+                            <span class="m-value" id="dispDiff">0.0 °C</span>
+                        </div>
+                    </div>
+
+                    <div class="simulation-action-buttons">
+                        <button class="btn btn-primary" id="btnHeat"><i class="fa-solid fa-fire"></i> Heat</button>
+                        <button class="btn btn-success" id="btnStart" disabled><i class="fa-solid fa-play"></i> Start Experiment</button>
+                        <button class="btn btn-warning" id="btnPause" disabled><i class="fa-solid fa-pause"></i> Pause</button>
+                        <button class="btn btn-info" id="btnResume" disabled style="display:none;"><i class="fa-solid fa-rotate-right"></i> Resume</button>
+                        <button class="btn btn-danger" id="btnReset"><i class="fa-solid fa-arrow-rotate-left"></i> Reset</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OBSERVATION TABLE SECTION -->
+        <section id="observation" class="lab-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-table"></i> Observation Table</h2>
+                <p>Recorded temperature values at selected time intervals</p>
+            </div>
+            <div class="card">
+                <div class="table-actions-bar">
+                    <button class="btn btn-sm btn-outline" id="btnAddReading"><i class="fa-solid fa-plus"></i> Add Reading</button>
+                    <button class="btn btn-sm btn-outline" id="btnDeleteSelected"><i class="fa-solid fa-trash"></i> Delete Selected</button>
+                    <button class="btn btn-sm btn-outline" id="btnClearTable"><i class="fa-solid fa-eraser"></i> Clear Table</button>
+                    <button class="btn btn-sm btn-primary" id="btnExportCSV"><i class="fa-solid fa-file-csv"></i> Download CSV</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="lab-table" id="observationTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllRows"></th>
+                                <th>S.No.</th>
+                                <th>Time ($t$ min)</th>
+                                <th>Temperature ($T$ °C)</th>
+                                <th>Ambient Temp ($T_s$ °C)</th>
+                                <th>Temp Difference ($T - T_s$ °C)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="observationBody">
+                            <tr class="placeholder-row">
+                                <td colspan="6" class="text-center">No observations recorded yet. Start experiment or add readings.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRAPH SECTION -->
+        <section id="graph" class="lab-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-chart-line"></i> Temperature vs Time Graph</h2>
+                <p>Graphical representation of cooling behavior over time</p>
+            </div>
+            <div class="card">
+                <div class="graph-controls-bar">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="chkTheoretical" checked> Show Theoretical Curve
+                    </label>
+                    <div class="graph-btn-group">
+                        <button class="btn btn-sm btn-outline" id="btnDownloadGraph"><i class="fa-solid fa-download"></i> Download Graph</button>
+                        <button class="btn btn-sm btn-outline" id="btnClearGraph"><i class="fa-solid fa-arrow-rotate-left"></i> Reset Graph</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="coolingChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- CALCULATION SECTION -->
+        <section id="calculation" class="lab-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-calculator"></i> Calculation of Cooling Constant ($k$)</h2>
+                <p>Mathematical determination of the cooling rate constant from observed data</p>
+            </div>
+            <div class="card">
+                <div class="calc-top-bar">
+                    <button class="btn btn-primary" id="btnAutoFill"><i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Fill From Table</button>
+                    <span class="calc-hint" id="calcHintMsg">Click auto-fill to load suitable data points from the observation table.</span>
+                </div>
+
+                <div class="calc-inputs-grid">
+                    <div class="form-group">
+                        <label for="calcT1">Initial Observation Temp ($T_1$) [°C]</label>
+                        <input type="number" id="calcT1" class="form-control" value="80" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="calcT2">Later Observation Temp ($T_2$) [°C]</label>
+                        <input type="number" id="calcT2" class="form-control" value="70" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="calcTs">Ambient Temp ($T_s$) [°C]</label>
+                        <input type="number" id="calcTs" class="form-control" value="25" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="calct1">Time $t_1$ [min]</label>
+                        <input type="number" id="calct1" class="form-control" value="2" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="calct2">Time $t_2$ [min]</label>
+                        <input type="number" id="calct2" class="form-control" value="4" step="0.1">
+                    </div>
+                </div>
+
+                <div class="calc-action-center">
+                    <button class="btn btn-success" id="btnCalculateK"><i class="fa-solid fa-square-root-variable"></i> Calculate $k$</button>
+                </div>
+
+                <div class="calculation-steps-box" id="calcStepsBox">
+                    <h4>Step-by-Step Calculation:</h4>
+                    <div id="stepFormula" class="math-eq"></div>
+                    <div id="stepSubstitution" class="math-eq"></div>
+                    <div id="stepResult" class="math-eq"></div>
+                    <div class="final-k-banner" id="finalKBanner">
+                        Calculated Cooling Constant $k$ = <span id="displayKValue">0.0000</span> min⁻¹
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULT SECTION -->
+        <section id="result" class="lab-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-square-poll-vertical"></i> Experiment Result</h2>
+                <p>Summary and final conclusions drawn from the virtual experiment</p>
+            </div>
+            <div class="card result-card">
+                <div class="result-summary-grid" id="resultSummaryGrid">
+                    <div class="r-card"><span>Initial Temp</span><strong id="resT0">-- °C</strong></div>
+                    <div class="r-card"><span>Final Temp</span><strong id="resTf">-- °C</strong></div>
+                    <div class="r-card"><span>Ambient Temp</span><strong id="resTs">-- °C</strong></div>
+                    <div class="r-card"><span>Total Time</span><strong id="resTime">-- min</strong></div>
+                    <div class="r-card"><span>Observations</span><strong id="resObsCount">0</strong></div>
+                    <div class="r-card"><span>Cooling Constant ($k$)</span><strong id="resK">-- min⁻¹</strong></div>
+                </div>
+                <div class="result-statement" id="resultStatement">
+                    <p>The temperature of the body decreases with time and gradually approaches the temperature of the surroundings. The cooling behavior follows the exponential relationship described by Newton's Law of Cooling.</p>
+                    <p class="disclaimer-text"><em>Experimental and theoretical values may differ slightly because this is an interactive simulated experiment.</em></p>
+                </div>
+                <div class="result-print-bar">
+                    <button class="btn btn-primary" id="btnPrintReport"><i class="fa-solid fa-print"></i> Print Experiment Report</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRECAUTIONS SECTION -->
+        <section id="precautions" class="lab-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-triangle-exclamation"></i> Precautions</h2>
+                <p>Important experimental guidelines for accurate thermal measurements</p>
+            </div>
+            <div class="card">
+                <ul class="precautions-list">
+                    <li><i class="fa-solid fa-check"></i> The surrounding temperature should remain approximately constant throughout the duration of the experiment.</li>
+                    <li><i class="fa-solid fa-check"></i> Temperature readings must be taken at regular, consistent time intervals.</li>
+                    <li><i class="fa-solid fa-check"></i> The initial temperature difference between the body and surroundings should preferably be sufficiently high for clear observation.</li>
+                    <li><i class="fa-solid fa-check"></i> The thermometer bulb should be completely immersed in the liquid sample for accurate thermal sensing.</li>
+                    <li><i class="fa-solid fa-check"></i> Avoid sudden environmental drafts or temperature fluctuations during the simulation run.</li>
+                    <li><i class="fa-solid fa-check"></i> Maintain proper calibration parameters when switching sample liquids.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- VIVA / SELF EVALUATION SECTION -->
+        <section id="viva" class="lab-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-circle-question"></i> Viva / Self-Evaluation</h2>
+                <p>Test your conceptual understanding of Newton's Law of Cooling</p>
+            </div>
+            <div class="card">
+                <div class="viva-score-board" id="vivaScoreBoard" style="display: none;">
+                    <h3>Quiz Completed!</h3>
+                    <p>Your Final Score: <span id="vivaScoreNum">0</span> / 8</p>
+                    <button class="btn btn-primary" id="btnRetryQuiz"><i class="fa-solid fa-rotate-right"></i> Retry Quiz</button>
+                </div>
+                <div class="quiz-container" id="quizContainer">
+                    <!-- Dynamic Questions injected via JS -->
+                </div>
+                <div class="quiz-submit-bar" id="quizSubmitBar">
+                    <button class="btn btn-success" id="btnSubmitQuiz"><i class="fa-solid fa-check-double"></i> Submit Answers</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2026 Physics Virtual Laboratory. Educational Simulation for Physical Sciences.</p>
+            <button id="backToTop" class="back-to-top-btn"><i class="fa-solid fa-arrow-up"></i> Top</button>
+        </div>
+    </footer>
+
+    <!-- Script File -->
+    <script src="./script.js"></script>
+</body>
+</html>
