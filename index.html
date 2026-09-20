@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Newton's Law of Cooling — Virtual Physics Laboratory</title>
+    <title>Newton's Law of Cooling — Advanced Virtual Physics Laboratory</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
@@ -18,7 +18,7 @@
     <!-- Top Academic Navigation Bar -->
     <header class="amrita-navbar">
         <div class="nav-left">
-            <span class="nav-title">Newton's Law of Cooling</span>
+            <span class="nav-title">Newton's Law of Cooling — Virtual Lab Simulation</span>
         </div>
         <div class="nav-right">
             <button class="nav-icon-btn" title="Help"><i class="fa-solid fa-circle-question"></i></button>
@@ -26,13 +26,145 @@
         </div>
     </header>
 
-    <!-- Main Workspace Container (Classic Two-Column Layout) -->
+    <!-- 1. DETAILED THEORY & INSTRUCTIONS SECTION (FIRST) -->
+    <div class="lab-document-container top-doc-container">
+        
+        <!-- THEORY SECTION WITH SUBHEADINGS -->
+        <section class="doc-section" id="theory-section">
+            <h2>1. Theory & Background</h2>
+            <div class="doc-card">
+                
+                <div class="sub-block">
+                    <h3>Aim</h3>
+                    <p>To verify Newton's Law of Cooling by plotting a cooling curve of a given liquid sample and determining the cooling constant $k$.</p>
+                </div>
+
+                <div class="sub-block">
+                    <h3>Apparatus Required</h3>
+                    <ul class="styled-list">
+                        <li>Double-walled calorimeter with wooden base</li>
+                        <li>Conical boiler flask with electric immersion heater</li>
+                        <li>Precision thermometer (0.1 deg C graduation)</li>
+                        <li>Connecting rubber tubing for vapor/heat transfer</li>
+                        <li>Stopwatch / Digital timer</li>
+                        <li>Liquid sample (Water / Kerosene Oil / Alcohol)</li>
+                        <li>Solid material blocks (Brass, Copper, Aluminium, Silver, Iron)</li>
+                    </ul>
+                </div>
+
+                <div class="sub-block">
+                    <h3>Theory</h3>
+                    <p class="lead-paragraph">
+                        Newton's Law of Cooling states that the rate of loss of heat of a liquid body is directly proportional to the temperature difference between the body and its surroundings, provided the temperature difference is small.
+                    </p>
+                    <div class="formula-box">
+                        <p>-dT / dt = k (T - Ts)</p>
+                        <p>Integrating: T(t) = Ts + (T0 - Ts) * exp(-k * t)</p>
+                    </div>
+                    <ul class="styled-list">
+                        <li>T = Temperature of the body at time t</li>
+                        <li>T0 = Initial temperature of the body</li>
+                        <li>Ts = Temperature of the surrounding medium (Ambient Temp)</li>
+                        <li>k = Characteristic cooling constant (min^-1) depending on surface area and material properties</li>
+                    </ul>
+                </div>
+
+                <div class="sub-block">
+                    <h3>Application</h3>
+                    <p>Used in metallurgy for casting cooling rates, engine block thermal dissipation studies, meteorological forecasting, and forensic body temperature estimation post-mortem.</p>
+                </div>
+
+                <div class="sub-block">
+                    <h3>Basic Instructions</h3>
+                    <p>Ensure draught-free surrounding conditions, proper calibration of the thermometer, and uniform stirring of the liquid sample during real laboratory execution.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PROCEDURE SECTION WITH SUBHEADINGS -->
+        <section class="doc-section" id="procedure-section">
+            <h2>2. Experimental Procedure & Guidelines</h2>
+            <div class="doc-card">
+                
+                <div class="sub-block">
+                    <h3>User Instructions</h3>
+                    <p>Familiarize yourself with the control panels on the right side of the simulator before initiating heating cycles.</p>
+                </div>
+
+                <div class="sub-block">
+                    <h3>Variable Menu</h3>
+                    <p>Select your desired calorimeter material, liquid medium, initial temperature T0, and ambient temperature Ts from the interactive dropdowns and sliders.</p>
+                </div>
+
+                <div class="sub-block">
+                    <h3>Measurement Menu</h3>
+                    <p>Monitor real-time thermometer readings, elapsed time counters, and thermal gradients (T - Ts) directly from the instrumentation readout box.</p>
+                </div>
+
+                <div class="sub-block">
+                    <h3>Procedure for Real Lab</h3>
+                    <ol class="procedure-steps-list">
+                        <li>Fill the double-walled calorimeter with the given hot liquid sample up to the designated mark.</li>
+                        <li>Insert the thermometer and stirrer through the insulated wooden lid.</li>
+                        <li>Note the initial temperature T0 and start the stopwatch simultaneously.</li>
+                        <li>Record temperature readings at regular time intervals (e.g., every 1 or 2 minutes) until the liquid cools significantly.</li>
+                        <li>Measure the steady surrounding room temperature Ts.</li>
+                    </ol>
+                </div>
+
+                <div class="sub-block">
+                    <h3>Observation & Real Table Format</h3>
+                    <p>Data points are automatically logged into structured tabular rows comparing time against temperature drop and thermal gradients.</p>
+                </div>
+
+                <div class="sub-block">
+                    <h3>Result Format</h3>
+                    <p>The experimental cooling constant $k$ is evaluated and verified against theoretical decay profiles.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- MATERIAL CONSTANTS REFERENCE TABLE -->
+        <section class="doc-section" id="constants-reference">
+            <h2>3. Material & Liquid Characteristic Constants (k Values)</h2>
+            <div class="doc-card">
+                <p>Reference table for characteristic cooling constants $k$ at standard ambient conditions (Ts = 25 deg C):</p>
+                <div class="table-responsive" style="margin-top: 1rem;">
+                    <table class="classic-lab-table">
+                        <thead>
+                            <tr>
+                                <th>Material / Liquid</th>
+                                <th>Type</th>
+                                <th>Density (g/cm^3)</th>
+                                <th>Thermal Conductivity (W/mK)</th>
+                                <th>Standard Cooling Constant k (min^-1)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Brass</strong></td><td>Solid Block</td><td>8.50</td><td>115</td><td>0.040</td></tr>
+                            <tr><td><strong>Copper</strong></td><td>Solid Block</td><td>8.96</td><td>401</td><td>0.055</td></tr>
+                            <tr><td><strong>Aluminium</strong></td><td>Solid Block</td><td>2.70</td><td>237</td><td>0.050</td></tr>
+                            <tr><td><strong>Silver</strong></td><td>Solid Block</td><td>10.49</td><td>429</td><td>0.065</td></tr>
+                            <tr><td><strong>Iron</strong></td><td>Solid Block</td><td>7.87</td><td>80.2</td><td>0.035</td></tr>
+                            <tr><td><strong>Water</strong></td><td>Liquid Medium</td><td>1.00</td><td>0.60</td><td>0.032</td></tr>
+                            <tr><td><strong>Kerosene Oil</strong></td><td>Liquid Medium</td><td>0.80</td><td>0.15</td><td>0.025</td></tr>
+                            <tr><td><strong>Alcohol</strong></td><td>Liquid Medium</td><td>0.79</td><td>0.18</td><td>0.028</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- 2. SIMULATOR & HIGH-END REAL 4K LAB WORKBENCH SECTION -->
     <div class="workspace-container">
         
-        <!-- LEFT SIMULATION CANVAS AREA -->
+        <!-- LEFT SIMULATION CANVAS AREA (Classic Amrita Vlab Style with 4K Polish) -->
         <div class="simulation-stage-pane">
             <div class="stage-canvas-box">
-                <!-- SVG / CSS Classic Lab Workbench Illustration mimicking Amrita Vlab reference -->
                 <div class="classic-lab-bench">
                     <div class="lab-background-wall"></div>
                     
@@ -80,7 +212,7 @@
                 </div>
             </div>
             <div class="stage-footer-bar">
-                <span>Copyright © Amrita University 2009-2026 (Virtual Lab Simulation Adaptation)</span>
+                <span>Copyright © Amrita University 2009-2026 | Real 4K Lab Simulation Environment</span>
             </div>
         </div>
 
@@ -90,7 +222,7 @@
             <!-- VARIABLES ACCORDION -->
             <div class="panel-section active">
                 <div class="panel-header" id="toggleVariables">
-                    <span>VARIABLES</span>
+                    <span>VARIABLES & TIME INTERVAL SETUP</span>
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
                 <div class="panel-body" id="variablesBody">
@@ -99,38 +231,39 @@
                     <div class="form-row">
                         <label>Select material:</label>
                         <select id="materialSelect" class="classic-select">
-                            <option value="brass">Brass</option>
-                            <option value="copper">Copper</option>
-                            <option value="aluminium">Aluminium</option>
-                            <option value="iron">Iron</option>
+                            <option value="brass">Brass (k = 0.040)</option>
+                            <option value="copper">Copper (k = 0.055)</option>
+                            <option value="aluminium">Aluminium (k = 0.050)</option>
+                            <option value="silver">Silver (k = 0.065)</option>
+                            <option value="iron">Iron (k = 0.035)</option>
                         </select>
                     </div>
 
                     <div class="form-row">
                         <label>Select liquid:</label>
                         <select id="liquidSelect" class="classic-select">
-                            <option value="water">Water</option>
-                            <option value="oil">Kerosene Oil</option>
-                            <option value="alcohol">Alcohol</option>
+                            <option value="water">Water (k = 0.032)</option>
+                            <option value="oil">Kerosene Oil (k = 0.025)</option>
+                            <option value="alcohol">Alcohol (k = 0.028)</option>
                         </select>
                     </div>
 
                     <div class="form-row">
-                        <label>Initial Temperature T0 (°C): <span id="lblT0">85</span></label>
+                        <label>Initial Temp T0 (°C): <span id="lblT0">85</span></label>
                         <input type="range" id="sliderT0" min="60" max="95" value="85" class="classic-range">
                     </div>
 
                     <div class="form-row">
-                        <label>Ambient Temperature Ts (°C): <span id="lblTs">25</span></label>
+                        <label>Ambient Temp Ts (°C): <span id="lblTs">25</span></label>
                         <input type="range" id="sliderTs" min="15" max="35" value="25" class="classic-range">
                     </div>
 
                     <div class="form-row">
-                        <label>Recording Interval:</label>
+                        <label>Time Interval (Temp Logging):</label>
                         <select id="intervalSelect" class="classic-select">
-                            <option value="1">1 minute</option>
-                            <option value="2" selected>2 minutes</option>
-                            <option value="3">3 minutes</option>
+                            <option value="0.5">30 seconds (0.5 min)</option>
+                            <option value="1" selected>1 minute</option>
+                            <option value="2">2 minutes</option>
                             <option value="5">5 minutes</option>
                         </select>
                     </div>
@@ -165,49 +298,12 @@
 
     </div>
 
-    <!-- LOWER SCROLLABLE SECTIONS (Theory, Procedure, Table, Graph, Calculation, Result, Precautions, Viva) -->
+    <!-- 3. OBSERVATION TABLE & AUTOMATIC GRAPH PLOTTING SECTION -->
     <div class="lab-document-container">
         
-        <!-- THEORY SECTION -->
-        <section class="doc-section" id="theory">
-            <h2>Theory</h2>
-            <div class="doc-card">
-                <p class="lead-paragraph">
-                    Newton's law of cooling states that the rate of loss of heat of a body is directly proportional to the difference in temperatures of the body and its surroundings, provided the temperature difference is small.
-                </p>
-                <div class="formula-box">
-                    <p>-dT / dt = k (T - Ts)</p>
-                    <p>On integrating, T(t) = Ts + (T0 - Ts) * e^(-kt)</p>
-                </div>
-                <ul class="styled-list">
-                    <li>T = Temperature of the body at time t</li>
-                    <li>T0 = Initial temperature of the body</li>
-                    <li>Ts = Temperature of the surrounding medium</li>
-                    <li>k = Positive constant depending upon the area and nature of the surface of the body</li>
-                </ul>
-                <p>Initially, cooling is rapid due to a high thermal gradient. As the body cools towards room temperature, the rate of cooling decreases exponentially.</p>
-            </div>
-        </section>
-
-        <!-- PROCEDURE SECTION -->
-        <section class="doc-section" id="procedure">
-            <h2>Procedure</h2>
-            <div class="doc-card">
-                <ol class="procedure-steps-list">
-                    <li>Select the material of the calorimeter and the liquid using the dropdowns in the variables panel.</li>
-                    <li>Set the initial temperature and ambient temperature parameters.</li>
-                    <li>Click on the <strong>START HEATING</strong> button to heat the liquid sample inside the boiler flask.</li>
-                    <li>Wait until the liquid reaches the desired initial temperature, at which point heating stops automatically.</li>
-                    <li>Click on <strong>START EXPERIMENT</strong> to begin cooling data recording at the selected time intervals.</li>
-                    <li>Observe the temperature readings dropping in real-time in the measurements box and observation table.</li>
-                    <li>Plot the cooling curve and calculate the cooling constant k in the calculation section.</li>
-                </ol>
-            </div>
-        </section>
-
         <!-- OBSERVATION TABLE SECTION -->
         <section class="doc-section" id="observation">
-            <h2>Observation Table</h2>
+            <h2>4. Observation Table</h2>
             <div class="doc-card">
                 <div class="table-toolbar">
                     <button class="btn-sm btn-outline" id="btnAddReading"><i class="fa-solid fa-plus"></i> Add Reading</button>
@@ -222,25 +318,25 @@
                                 <th><input type="checkbox" id="selectAllRows"></th>
                                 <th>S.No.</th>
                                 <th>Time t (min)</th>
-                                <th>Temperature T (deg C)</th>
-                                <th>Ambient Temp Ts (deg C)</th>
-                                <th>Temp Difference (T - Ts) (deg C)</th>
+                                <th>Temperature T (°C)</th>
+                                <th>Ambient Temp Ts (°C)</th>
+                                <th>Temp Difference (T - Ts) (°C)</th>
                             </tr>
                         </thead>
                         <tbody id="observationBody">
-                            <tr class="empty-row"><td colspan="6" class="text-center">No observations recorded yet. Start experiment to generate data.</td></tr>
+                            <tr class="empty-row"><td colspan="6" class="text-center">No observations recorded yet. Start experiment to generate data automatically.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <!-- GRAPH SECTION -->
+        <!-- AUTOMATIC GRAPH SECTION -->
         <section class="doc-section" id="graph">
-            <h2>Temperature vs Time Graph</h2>
+            <h2>5. Automatic Temperature vs Time Cooling Curve Graph</h2>
             <div class="doc-card">
                 <div class="graph-toolbar">
-                    <label><input type="checkbox" id="chkTheoretical" checked> Show Theoretical Cooling Curve</label>
+                    <label><input type="checkbox" id="chkTheoretical" checked> Show Theoretical Exponential Cooling Curve</label>
                     <div class="right-buttons">
                         <button class="btn-sm btn-outline" id="btnDownloadGraph"><i class="fa-solid fa-download"></i> Download Graph Image</button>
                     </div>
@@ -251,25 +347,25 @@
             </div>
         </section>
 
-        <!-- CALCULATION SECTION -->
+        <!-- DETAILED CALCULATION SECTION -->
         <section class="doc-section" id="calculation">
-            <h2>Calculation of Cooling Constant k</h2>
+            <h2>6. Detailed Calculation</h2>
             <div class="doc-card">
                 <div class="calc-toolbar">
                     <button class="btn-sm btn-primary-custom" id="btnAutoFill"><i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Fill From Table</button>
                 </div>
                 <div class="calc-grid">
-                    <div class="f-group"><label>T1 (°C):</label><input type="number" id="calcT1" class="classic-input" value="80" step="0.1"></div>
-                    <div class="f-group"><label>T2 (°C):</label><input type="number" id="calcT2" class="classic-input" value="70" step="0.1"></div>
-                    <div class="f-group"><label>Ts (°C):</label><input type="number" id="calcTs" class="classic-input" value="25" step="0.1"></div>
-                    <div class="f-group"><label>t1 (min):</label><input type="number" id="calct1" class="classic-input" value="2" step="0.1"></div>
-                    <div class="f-group"><label>t2 (min):</label><input type="number" id="calct2" class="classic-input" value="4" step="0.1"></div>
+                    <div class="f-group"><label>Initial T1 (°C):</label><input type="number" id="calcT1" class="classic-input" value="80" step="0.1"></div>
+                    <div class="f-group"><label>Final T2 (°C):</label><input type="number" id="calcT2" class="classic-input" value="70" step="0.1"></div>
+                    <div class="f-group"><label>Ambient Ts (°C):</label><input type="number" id="calcTs" class="classic-input" value="25" step="0.1"></div>
+                    <div class="f-group"><label>Time t1 (min):</label><input type="number" id="calct1" class="classic-input" value="2" step="0.1"></div>
+                    <div class="f-group"><label>Time t2 (min):</label><input type="number" id="calct2" class="classic-input" value="4" step="0.1"></div>
                 </div>
                 <div class="calc-action-bar">
                     <button class="btn-classic btn-success-custom" id="btnCalculateK"><i class="fa-solid fa-calculator"></i> Calculate Constant k</button>
                 </div>
                 <div class="calculation-result-box" id="calcResultBox">
-                    <p>Formula: k = (1 / delta t) * ln((T1 - Ts) / (T2 - Ts))</p>
+                    <p>Formula: k = (1 / (t2 - t1)) * ln((T1 - Ts) / (T2 - Ts))</p>
                     <p class="final-k-text">Calculated Cooling Constant k = <span id="displayKValue">0.0000</span> min^-1</p>
                 </div>
             </div>
@@ -277,7 +373,7 @@
 
         <!-- RESULT SECTION -->
         <section class="doc-section" id="result">
-            <h2>Result</h2>
+            <h2>7. Result</h2>
             <div class="doc-card">
                 <div class="result-summary-grid">
                     <div class="res-box"><span>Initial Temp</span><strong id="resT0">-- °C</strong></div>
@@ -287,34 +383,29 @@
                     <div class="res-box"><span>Cooling Constant k</span><strong id="resK">-- min^-1</strong></div>
                 </div>
                 <p class="result-statement-text">
-                    The cooling curve of the given liquid sample follows Newton's Law of Cooling, showing exponential decay towards the ambient temperature.
+                    <strong>Conclusion:</strong> The cooling curve plotted experimentally conforms perfectly to Newton's Law of Cooling, exhibiting exponential decay towards the ambient temperature.
                 </p>
                 <div class="print-bar">
-                    <button class="btn-classic btn-primary-custom" id="btnPrintReport"><i class="fa-solid fa-print"></i> Print Report</button>
+                    <button class="btn-classic btn-primary-custom" id="btnPrintReport"><i class="fa-solid fa-print"></i> Print Lab Report</button>
                 </div>
             </div>
         </section>
 
-        <!-- PRECAUTIONS SECTION -->
+        <!-- PRECAUTIONS & VIVA SECTION -->
         <section class="doc-section" id="precautions">
-            <h2>Precautions</h2>
+            <h2>8. Precautions & Viva Voce</h2>
             <div class="doc-card">
-                <ul class="styled-list">
-                    <li>The surrounding temperature should remain constant throughout the experiment.</li>
-                    <li>Readings should be recorded at regular time intervals without delay.</li>
-                    <li>The thermometer bulb must be completely immersed in the liquid sample.</li>
-                    <li>Lags in reading or external drafts should be avoided.</li>
+                <h3 style="margin-bottom:0.5rem; color:var(--amrita-dark);">Precautions</h3>
+                <ul class="styled-list" style="margin-bottom:1.5rem;">
+                    <li>Surrounding temperature Ts must be kept constant throughout the experiment.</li>
+                    <li>Readings should be taken at strict preset time intervals without parallax error.</li>
+                    <li>Thermometer bulb must be fully submerged in the liquid sample.</li>
                 </ul>
-            </div>
-        </section>
 
-        <!-- VIVA SECTION -->
-        <section class="doc-section" id="viva">
-            <h2>Viva / Self-Evaluation</h2>
-            <div class="doc-card">
+                <h3 style="margin-bottom:0.5rem; color:var(--amrita-dark);">Viva Voce / Self-Evaluation Quiz</h3>
                 <div id="vivaScoreBoard" class="score-board" style="display:none;">
                     <h3>Quiz Finished!</h3>
-                    <p>Your Score: <span id="vivaScoreNum">0</span> / 8</p>
+                    <p>Your Score: <span id="vivaScoreNum">0</span> / 4</p>
                     <button class="btn-classic btn-primary-custom" id="btnRetryQuiz">Retry Quiz</button>
                 </div>
                 <div id="quizContainer"></div>
