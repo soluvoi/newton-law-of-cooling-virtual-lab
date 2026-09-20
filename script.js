@@ -1,84 +1,59 @@
 /* ==========================================================
-   NEWTON'S LAW OF COOLING — ADVANCED SCRIPT ENGINE
+   AMRITA VIRTUAL LAB THEME - JS SCRIPT
    ========================================================== */
+
+// Tab Switching Logic
+function openTab(evt, tabId) {
+    let tabContents = document.getElementsByClassName("tab-content");
+    for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].style.display = "none";
+    }
+    
+    let tabBtns = document.getElementsByClassName("tab-btn");
+    for (let i = 0; i < tabBtns.length; i++) {
+        tabBtns[i].className = tabBtns[i].className.replace(" active", "");
+    }
+    
+    document.getElementById(tabId).style.display = tabId === 'tab-simulator' ? 'flex' : 'block';
+    evt.currentTarget.className += " active";
+
+    // Re-render chart if observation tab is opened
+    if(tabId === 'tab-observation' && window.updateGraph) {
+        window.updateGraph();
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     let state = {
-        material: "brass",
-        liquid: "water",
-        initialTemperature: 85,
-        ambientTemperature: 25,
-        currentTemperature: 25,
-        coolingConstant: 0.040,
-        elapsedTimeMinutes: 0,
-        recordingInterval: 1,
-        experimentRunning: false,
-        experimentPaused: false,
-        isHeating: false,
-        observations: [],
-        nextRecordTime: 1
+        material: "brass", liquid: "water",
+        initialTemperature: 85, ambientTemperature: 25, currentTemperature: 25,
+        coolingConstant: 0.040, elapsedTimeMinutes: 0, recordingInterval: 1,
+        experimentRunning: false, isHeating: false, observations: [], nextRecordTime: 1
     };
 
     let simTimer = null;
     let chartInstance = null;
 
-    // DOM Elements
-    const materialSelect = document.getElementById("materialSelect");
-    const liquidSelect = document.getElementById("liquidSelect");
+    // Controls
     const sliderT0 = document.getElementById("sliderT0");
     const sliderTs = document.getElementById("sliderTs");
     const lblT0 = document.getElementById("lblT0");
     const lblTs = document.getElementById("lblTs");
     const intervalSelect = document.getElementById("intervalSelect");
+    const materialSelect = document.getElementById("materialSelect");
+    const liquidSelect = document.getElementById("liquidSelect");
 
     const btnStartExperiment = document.getElementById("btnStartExperiment");
     const btnHeat = document.getElementById("btnHeat");
     const btnReset = document.getElementById("btnReset");
-    const btnPause = document.getElementById("btnPause");
-    const btnResume = document.getElementById("btnResume");
 
-    const powerLamp = document.getElementById("powerLamp");
-    const boilerLiquid = document.getElementById("boilerLiquid");
-    const mercuryColumn = document.getElementById("mercuryColumn");
     const dispThermometerReading = document.getElementById("dispThermometerReading");
     const dispElapsedTime = document.getElementById("dispElapsedTime");
     const dispTempDiff = document.getElementById("dispTempDiff");
+    const mercuryColumn = document.getElementById("mercuryColumn");
+    const powerLamp = document.getElementById("powerLamp");
 
-    const observationBody = document.getElementById("observationBody");
-    const selectAllRows = document.getElementById("selectAllRows");
-    const btnAddReading = document.getElementById("btnAddReading");
-    const btnDeleteSelected = document.getElementById("btnDeleteSelected");
-    const btnClearTable = document.getElementById("btnClearTable");
-    const btnExportCSV = document.getElementById("btnExportCSV");
-
-    const chkTheoretical = document.getElementById("chkTheoretical");
-    const btnDownloadGraph = document.getElementById("btnDownloadGraph");
-
-    const btnAutoFill = document.getElementById("btnAutoFill");
-    const calcT1 = document.getElementById("calcT1");
-    const calcT2 = document.getElementById("calcT2");
-    const calcTs = document.getElementById("calcTs");
-    const calct1 = document.getElementById("calct1");
-    const calct2 = document.getElementById("calct2");
-    const btnCalculateK = document.getElementById("btnCalculateK");
-    const displayKValue = document.getElementById("displayKValue");
-
-    const resT0 = document.getElementById("resT0");
-    const resTf = document.getElementById("resTf");
-    const resTs = document.getElementById("resTs");
-    const resTime = document.getElementById("resTime");
-    const resK = document.getElementById("resK");
-    const btnPrintReport = document.getElementById("btnPrintReport");
-
-    // Accordions
-    document.querySelectorAll(".panel-header").forEach(header => {
-        header.addEventListener("click", () => {
-            let body = header.nextElementSibling;
-            body.style.display = body.style.display === "none" ? "flex" : "none";
-        });
-    });
-
-    // Event Listeners for controls
+    // Event Listeners
     sliderT0.addEventListener("input", (e) => {
         state.initialTemperature = parseFloat(e.target.value);
         lblT0.textContent = state.initialTemperature;
@@ -91,57 +66,27 @@ document.addEventListener("DOMContentLoaded", () => {
     sliderTs.addEventListener("input", (e) => {
         state.ambientTemperature = parseFloat(e.target.value);
         lblTs.textContent = state.ambientTemperature;
-        calcTs.value = state.ambientTemperature;
+        document.getElementById("calcTs").value = state.ambientTemperature;
         updateVisuals();
     });
 
     intervalSelect.addEventListener("change", (e) => {
         state.recordingInterval = parseFloat(e.target.value);
-        state.nextRecordTime = state.elapsedTimeMinutes + state.recordingInterval;
     });
 
     materialSelect.addEventListener("change", (e) => {
+        const constants = { brass: 0.040, copper: 0.055, aluminium: 0.050, silver: 0.065, iron: 0.035 };
         state.material = e.target.value;
-        setMaterialConstant();
+        state.coolingConstant = constants[state.material];
     });
 
     liquidSelect.addEventListener("change", (e) => {
-        state.liquid = e.target.value;
-        setLiquidConstant();
-    });
-
-    function setMaterialConstant() {
-        const constants = { brass: 0.040, copper: 0.055, aluminium: 0.050, silver: 0.065, iron: 0.035 };
-        state.coolingConstant = constants[state.material] || 0.040;
-    }
-
-    function setLiquidConstant() {
         const constants = { water: 0.032, oil: 0.025, alcohol: 0.028 };
-        state.coolingConstant = constants[state.liquid] || 0.032;
-    }
-
-    btnHeat.addEventListener("click", startHeating);
-    btnStartExperiment.addEventListener("click", startCoolingExperiment);
-    btnPause.addEventListener("click", pauseExperiment);
-    btnResume.addEventListener("click", resumeExperiment);
-    btnReset.addEventListener("click", resetExperiment);
-
-    btnAddReading.addEventListener("click", recordObservation);
-    btnDeleteSelected.addEventListener("click", deleteSelectedObservations);
-    btnClearTable.addEventListener("click", clearObservationTable);
-    btnExportCSV.addEventListener("click", exportCSV);
-
-    chkTheoretical.addEventListener("change", updateGraph);
-    btnDownloadGraph.addEventListener("click", downloadGraph);
-    btnAutoFill.addEventListener("click", autoFillCalculation);
-    btnCalculateK.addEventListener("click", calculateConstantK);
-    btnPrintReport.addEventListener("click", () => window.print());
-
-    selectAllRows.addEventListener("change", (e) => {
-        document.querySelectorAll(".row-checkbox").forEach(cb => cb.checked = e.target.checked);
+        state.liquid = e.target.value;
+        state.coolingConstant = constants[state.liquid];
     });
 
-    function startHeating() {
+    btnHeat.addEventListener("click", () => {
         if (state.isHeating || state.experimentRunning) return;
         state.isHeating = true;
         btnHeat.disabled = true;
@@ -150,26 +95,22 @@ document.addEventListener("DOMContentLoaded", () => {
         let targetT = state.initialTemperature;
         let heatInterval = setInterval(() => {
             if (state.currentTemperature < targetT) {
-                state.currentTemperature += 0.5;
+                state.currentTemperature += 1;
                 if (state.currentTemperature > targetT) state.currentTemperature = targetT;
                 updateVisuals();
             } else {
                 clearInterval(heatInterval);
                 state.isHeating = false;
                 powerLamp.classList.remove("active");
-                btnHeat.disabled = false;
-                alert("Initial temperature reached successfully. You can now start the cooling experiment.");
+                alert("Heating complete. Click 'Start Cooling' to begin data recording.");
             }
-        }, 50);
-    }
+        }, 30);
+    });
 
-    function startCoolingExperiment() {
+    btnStartExperiment.addEventListener("click", () => {
         if (state.experimentRunning) return;
         state.experimentRunning = true;
-        state.experimentPaused = false;
         btnStartExperiment.disabled = true;
-        btnPause.disabled = false;
-        btnResume.style.display = "none";
         sliderT0.disabled = true;
         sliderTs.disabled = true;
 
@@ -186,85 +127,53 @@ document.addEventListener("DOMContentLoaded", () => {
             let t = state.elapsedTimeMinutes;
 
             state.currentTemperature = Ts + (T0 - Ts) * Math.exp(-k * t);
-            if (state.currentTemperature < Ts) state.currentTemperature = Ts;
-
+            
             updateVisuals();
 
-            if (state.elapsedTimeMinutes >= state.nextRecordTime) {
+            if (state.elapsedTimeMinutes >= state.nextRecordTime - 0.01) { // -0.01 for float tolerance
                 recordObservationAt(parseFloat(state.elapsedTimeMinutes.toFixed(1)), state.currentTemperature);
                 state.nextRecordTime += state.recordingInterval;
             }
 
             if (Math.abs(state.currentTemperature - Ts) < 0.1) {
-                pauseExperiment();
-                alert("Experiment completed. Liquid temperature has reached ambient temperature.");
+                clearInterval(simTimer);
+                alert("Experiment Finished. Check Observation Tab.");
             }
         }, 100);
-    }
+    });
 
-    function pauseExperiment() {
-        if (!state.experimentRunning) return;
+    btnReset.addEventListener("click", () => {
         clearInterval(simTimer);
         state.experimentRunning = false;
-        state.experimentPaused = true;
-        btnPause.disabled = true;
-        btnResume.style.display = "inline-block";
-        btnResume.disabled = false;
-    }
-
-    function resumeExperiment() {
-        if (!state.experimentPaused) return;
-        state.experimentPaused = false;
-        btnResume.style.display = "none";
-        btnPause.disabled = false;
-        startCoolingExperiment();
-    }
-
-    function resetExperiment() {
-        clearInterval(simTimer);
-        state.experimentRunning = false;
-        state.experimentPaused = false;
         state.isHeating = false;
         state.elapsedTimeMinutes = 0;
         state.currentTemperature = state.initialTemperature;
-        state.nextRecordTime = state.recordingInterval;
         state.observations = [];
+        state.nextRecordTime = state.recordingInterval;
 
         btnStartExperiment.disabled = false;
         btnHeat.disabled = false;
-        btnPause.disabled = true;
-        btnResume.style.display = "none";
         sliderT0.disabled = false;
         sliderTs.disabled = false;
         powerLamp.classList.remove("active");
 
         updateVisuals();
         updateObservationTable();
-        updateGraph();
-        updateResultSummary();
-    }
+        if(window.updateGraph) window.updateGraph();
+    });
 
     function updateVisuals() {
         let T = state.currentTemperature;
         let Ts = state.ambientTemperature;
 
         dispThermometerReading.textContent = T.toFixed(1) + " °C";
-        dispElapsedTime.textContent = formatTime(state.elapsedTimeMinutes);
+        let m = Math.floor(state.elapsedTimeMinutes);
+        let s = Math.floor((state.elapsedTimeMinutes - m) * 60);
+        dispElapsedTime.textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
         dispTempDiff.textContent = Math.max(0, T - Ts).toFixed(1) + " °C";
 
         let percent = ((T - 15) / (100 - 15)) * 100;
-        percent = Math.max(5, Math.min(100, percent));
-        mercuryColumn.style.height = percent + "%";
-    }
-
-    function formatTime(min) {
-        let m = Math.floor(min);
-        let s = Math.floor((min - m) * 60);
-        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-    }
-
-    function recordObservation() {
-        recordObservationAt(parseFloat(state.elapsedTimeMinutes.toFixed(1)), state.currentTemperature);
+        mercuryColumn.style.height = Math.max(5, Math.min(100, percent)) + "%";
     }
 
     function recordObservationAt(time, temp) {
@@ -275,235 +184,130 @@ document.addEventListener("DOMContentLoaded", () => {
             diff: parseFloat((temp - state.ambientTemperature).toFixed(1))
         });
         updateObservationTable();
-        updateGraph();
+        if(window.updateGraph) window.updateGraph();
         updateResultSummary();
     }
 
+    const observationBody = document.getElementById("observationBody");
     function updateObservationTable() {
         observationBody.innerHTML = "";
         if (state.observations.length === 0) {
-            observationBody.innerHTML = `<tr class="empty-row"><td colspan="6" class="text-center">No observations recorded yet. Start experiment to generate data automatically.</td></tr>`;
+            observationBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No data.</td></tr>`;
             return;
         }
-
         state.observations.forEach((obs, idx) => {
             let tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td><input type="checkbox" class="row-checkbox" data-index="${idx}"></td>
-                <td>${idx + 1}</td>
-                <td>${obs.time}</td>
-                <td><input type="number" class="classic-input" value="${obs.temperature}" data-index="${idx}" style="width:75px;" step="0.1"></td>
-                <td>${obs.ambient}</td>
-                <td>${obs.diff}</td>
-            `;
+            tr.innerHTML = `<td>${idx + 1}</td><td>${obs.time}</td><td>${obs.temperature}</td><td>${obs.ambient}</td><td>${obs.diff}</td>`;
             observationBody.appendChild(tr);
         });
-
-        document.querySelectorAll(".classic-input[data-index]").forEach(input => {
-            input.addEventListener("change", (e) => {
-                let idx = parseInt(e.target.getAttribute("data-index"));
-                let val = parseFloat(e.target.value);
-                if (!isNaN(val)) {
-                    state.observations[idx].temperature = val;
-                    state.observations[idx].diff = parseFloat((val - state.observations[idx].ambient).toFixed(1));
-                    updateObservationTable();
-                    updateGraph();
-                }
-            });
-        });
     }
 
-    function deleteSelectedObservations() {
-        let checked = document.querySelectorAll(".row-checkbox:checked");
-        let indices = Array.from(checked).map(cb => parseInt(cb.getAttribute("data-index")));
-        state.observations = state.observations.filter((_, idx) => !indices.includes(idx));
-        updateObservationTable();
-        updateGraph();
-        updateResultSummary();
-    }
+    document.getElementById("btnAddReading").addEventListener("click", () => {
+        if(!state.experimentRunning && state.observations.length > 0) {
+            recordObservationAt(parseFloat(state.elapsedTimeMinutes.toFixed(1)), state.currentTemperature);
+        }
+    });
 
-    function clearObservationTable() {
+    document.getElementById("btnClearTable").addEventListener("click", () => {
         state.observations = [];
         updateObservationTable();
-        updateGraph();
-        updateResultSummary();
-    }
+        if(window.updateGraph) window.updateGraph();
+    });
 
-    function exportCSV() {
-        if (state.observations.length === 0) {
-            alert("No observations available to export.");
-            return;
-        }
-        let csv = "S.No,Time(min),Temperature(deg C),AmbientTemp(deg C),TempDiff(deg C)\n";
-        state.observations.forEach((o, i) => {
-            csv += `${i+1},${o.time},${o.temperature},${o.ambient},${o.diff}\n`;
-        });
-        let blob = new Blob([csv], { type: 'text/csv' });
-        let link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'newtons_cooling_data.csv';
-        link.click();
-    }
-
-    // Chart.js Setup
+    // Chart
     function initChart() {
         const ctx = document.getElementById("coolingChart").getContext("2d");
         chartInstance = new Chart(ctx, {
             type: 'line',
-            data: {
-                datasets: [
-                    { label: 'Experimental Data Points', data: [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.1)', borderWidth: 2, pointRadius: 4 },
-                    { label: 'Theoretical Curve', data: [], borderColor: '#dc2626', borderDash: [5,5], borderWidth: 2, pointRadius: 0 }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { type: 'linear', title: { display: true, text: 'Time t (minutes)' } },
-                    y: { title: { display: true, text: 'Temperature T (°C)' } }
-                }
+            data: { datasets: [
+                { label: 'Experimental Data', data: [], borderColor: '#ff9900', borderWidth: 2, pointRadius: 4 },
+                { label: 'Theoretical Curve', data: [], borderColor: '#003366', borderDash: [5,5], borderWidth: 2, pointRadius: 0 }
+            ]},
+            options: { responsive: true, maintainAspectRatio: false,
+                scales: { x: { type: 'linear', title: { display: true, text: 'Time (min)' } }, y: { title: { display: true, text: 'Temp (°C)' } } }
             }
         });
     }
 
-    function updateGraph() {
+    window.updateGraph = function() {
         if (!chartInstance) return;
-        let exp = state.observations.map(o => ({ x: o.time, y: o.temperature }));
-        chartInstance.data.datasets[0].data = exp;
-
-        if (chkTheoretical.checked && state.observations.length > 0) {
+        chartInstance.data.datasets[0].data = state.observations.map(o => ({ x: o.time, y: o.temperature }));
+        
+        if (document.getElementById("chkTheoretical").checked && state.observations.length > 0) {
             let T0 = state.observations[0].temperature;
             let Ts = state.ambientTemperature;
-            let k = state.coolingConstant;
-            let maxT = state.observations[state.observations.length - 1].time;
-            maxT = Math.max(maxT, 10);
-
+            let maxT = Math.max(state.observations[state.observations.length - 1].time, 10);
             let theo = [];
             for (let t = 0; t <= maxT; t += 0.5) {
-                let T = Ts + (T0 - Ts) * Math.exp(-k * t);
-                theo.push({ x: t, y: parseFloat(T.toFixed(2)) });
+                theo.push({ x: t, y: Ts + (T0 - Ts) * Math.exp(-state.coolingConstant * t) });
             }
             chartInstance.data.datasets[1].data = theo;
             chartInstance.data.datasets[1].hidden = false;
         } else {
-            chartInstance.data.datasets[1].data = [];
+            chartInstance.data.datasets[1].hidden = true;
         }
         chartInstance.update();
     }
+    
+    document.getElementById("chkTheoretical").addEventListener("change", window.updateGraph);
 
-    function downloadGraph() {
-        if (!chartInstance) return;
-        let link = document.createElement('a');
-        link.download = 'cooling_graph.png';
-        link.href = chartInstance.toBase64Image();
-        link.click();
-    }
+    // Calculation
+    document.getElementById("btnAutoFill").addEventListener("click", () => {
+        if (state.observations.length < 2) return alert("Need at least 2 readings.");
+        let first = state.observations[0], last = state.observations[state.observations.length - 1];
+        document.getElementById("calcT1").value = first.temperature;
+        document.getElementById("calcT2").value = last.temperature;
+        document.getElementById("calcTs").value = first.ambient;
+        document.getElementById("calct1").value = first.time;
+        document.getElementById("calct2").value = last.time;
+    });
 
-    function autoFillCalculation() {
-        if (state.observations.length < 2) {
-            alert("Record at least two observations in the table first.");
-            return;
-        }
-        let first = state.observations[0];
-        let later = state.observations[state.observations.length - 1];
-        calcT1.value = first.temperature;
-        calcT2.value = later.temperature;
-        calcTs.value = first.ambient;
-        calct1.value = first.time;
-        calct2.value = later.time;
-        calculateConstantK();
-    }
-
-    function calculateConstantK() {
-        let T1 = parseFloat(calcT1.value);
-        let T2 = parseFloat(calcT2.value);
-        let Ts = parseFloat(calcTs.value);
-        let t1 = parseFloat(calct1.value);
-        let t2 = parseFloat(calct2.value);
-
-        if (isNaN(T1) || isNaN(T2) || isNaN(Ts) || isNaN(t1) || isNaN(t2)) {
-            alert("Please enter valid numeric values for calculation.");
-            return;
-        }
-        let dt = t2 - t1;
-        if (dt <= 0) {
-            alert("Time t2 must be greater than t1.");
-            return;
-        }
-        let ratio = (T1 - Ts) / (T2 - Ts);
-        if (ratio <= 0) {
-            alert("Invalid temperature range for logarithmic calculation.");
-            return;
-        }
-        let k = (1 / dt) * Math.log(ratio);
-        displayKValue.textContent = k.toFixed(5);
-        resK.textContent = k.toFixed(5) + " min^-1";
-    }
+    document.getElementById("btnCalculateK").addEventListener("click", () => {
+        let T1 = parseFloat(document.getElementById("calcT1").value);
+        let T2 = parseFloat(document.getElementById("calcT2").value);
+        let Ts = parseFloat(document.getElementById("calcTs").value);
+        let dt = parseFloat(document.getElementById("calct2").value) - parseFloat(document.getElementById("calct1").value);
+        
+        let k = (1 / dt) * Math.log((T1 - Ts) / (T2 - Ts));
+        document.getElementById("displayKValue").textContent = k.toFixed(5);
+        document.getElementById("resK").textContent = k.toFixed(5) + " min⁻¹";
+    });
 
     function updateResultSummary() {
-        let t0 = state.observations.length > 0 ? state.observations[0].temperature : state.initialTemperature;
-        let tf = state.observations.length > 0 ? state.observations[state.observations.length - 1].temperature : state.currentTemperature;
-        let totTime = state.observations.length > 0 ? state.observations[state.observations.length - 1].time : 0;
-
-        resT0.textContent = t0.toFixed(1) + " °C";
-        resTf.textContent = tf.toFixed(1) + " °C";
-        resTs.textContent = state.ambientTemperature.toFixed(1) + " °C";
-        resTime.textContent = totTime.toFixed(1) + " min";
+        if(state.observations.length > 0){
+            document.getElementById("resT0").textContent = state.observations[0].temperature.toFixed(1) + " °C";
+            document.getElementById("resTf").textContent = state.observations[state.observations.length-1].temperature.toFixed(1) + " °C";
+            document.getElementById("resTs").textContent = state.ambientTemperature.toFixed(1) + " °C";
+            document.getElementById("resTime").textContent = state.observations[state.observations.length-1].time.toFixed(1) + " min";
+        }
     }
 
     // Quiz
     const quizData = [
-        { q: "Newton's law of cooling states that rate of heat loss is proportional to:", options: ["Absolute temperature", "Temperature difference with surroundings", "Volume of body", "Pressure"], answer: 1 },
-        { q: "What is the theoretical time required for a body to reach ambient temperature?", options: ["Finite time", "Infinite time", "Zero time", "Exactly 10 minutes"], answer: 1 },
-        { q: "Initially, the rate of cooling of a hot liquid is:", options: ["Maximum / Fast", "Minimum / Slow", "Zero", "Constant"], answer: 0 },
-        { q: "What are the standard SI-derived units of cooling constant k in this experiment?", options: ["kg/m^3", "Joules", "min^-1", "Kelvin"], answer: 2 }
+        { q: "Newton's law of cooling is applicable when:", options: ["Temperature difference is very large", "Temperature difference is small", "Liquid is boiling", "None of these"], answer: 1 },
+        { q: "The cooling curve (Temp vs Time) is a:", options: ["Straight Line", "Parabola", "Exponential curve", "Hyperbola"], answer: 2 },
+        { q: "What is the unit of cooling constant (k)?", options: ["Kelvin", "min⁻¹ or sec⁻¹", "Joules", "Watts"], answer: 1 },
+        { q: "If surrounding temperature increases, the rate of cooling:", options: ["Increases", "Decreases", "Remains Same", "Becomes Zero"], answer: 1 }
     ];
 
-    function initQuiz() {
-        const container = document.getElementById("quizContainer");
-        container.innerHTML = "";
-        quizData.forEach((q, idx) => {
-            let card = document.createElement("div");
-            card.classList.add("quiz-question-card");
-            card.innerHTML = `
-                <p>Q${idx+1}. ${q.q}</p>
-                <div class="quiz-options">
-                    ${q.options.map((opt, oIdx) => `<label><input type="radio" name="q_${idx}" value="${oIdx}"> ${opt}</label>`).join('')}
-                </div>
-                <div class="quiz-feedback" id="q_feedback_${idx}"></div>
-            `;
-            container.appendChild(card);
-        });
-    }
+    const quizCont = document.getElementById("quizContainer");
+    quizData.forEach((q, idx) => {
+        let div = document.createElement("div");
+        div.className = "quiz-q";
+        div.innerHTML = `<p>Q${idx+1}. ${q.q}</p>` + q.options.map((opt, i) => `<label><input type="radio" name="q${idx}" value="${i}"> ${opt}</label>`).join('');
+        quizCont.appendChild(div);
+    });
 
     document.getElementById("btnSubmitQuiz").addEventListener("click", () => {
         let score = 0;
         quizData.forEach((q, idx) => {
-            let selected = document.querySelector(`input[name="q_${idx}"]:checked`);
-            let feedback = document.getElementById(`q_feedback_${idx}`);
-            if (selected && parseInt(selected.value) === q.answer) {
-                score++;
-                feedback.textContent = "Correct!";
-                feedback.className = "quiz-feedback correct";
-            } else {
-                feedback.textContent = `Incorrect. Correct answer is: ${q.options[q.answer]}`;
-                feedback.className = "quiz-feedback incorrect";
-            }
+            let sel = document.querySelector(`input[name="q${idx}"]:checked`);
+            if (sel && parseInt(sel.value) === q.answer) score++;
         });
         document.getElementById("vivaScoreNum").textContent = score;
         document.getElementById("vivaScoreBoard").style.display = "block";
-        document.getElementById("quizSubmitBar").style.display = "none";
     });
 
-    document.getElementById("btnRetryQuiz").addEventListener("click", () => {
-        document.getElementById("vivaScoreBoard").style.display = "none";
-        document.getElementById("quizSubmitBar").style.display = "block";
-        initQuiz();
-    });
-
-    // Initialize
     initChart();
-    initQuiz();
-    resetExperiment();
+    updateVisuals();
 });
