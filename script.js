@@ -1,5 +1,5 @@
 /* ==========================================================
-   NEWTON'S LAW OF COOLING — CLASSIC SCRIPT ENGINE
+   NEWTON'S LAW OF COOLING — ADVANCED SCRIPT ENGINE
    ========================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -9,20 +9,20 @@ document.addEventListener("DOMContentLoaded", () => {
         initialTemperature: 85,
         ambientTemperature: 25,
         currentTemperature: 25,
-        coolingConstant: 0.035,
+        coolingConstant: 0.040,
         elapsedTimeMinutes: 0,
-        recordingInterval: 2,
+        recordingInterval: 1,
         experimentRunning: false,
         experimentPaused: false,
         isHeating: false,
         observations: [],
-        nextRecordTime: 2
+        nextRecordTime: 1
     };
 
     let simTimer = null;
     let chartInstance = null;
 
-    // DOM References
+    // DOM Elements
     const materialSelect = document.getElementById("materialSelect");
     const liquidSelect = document.getElementById("liquidSelect");
     const sliderT0 = document.getElementById("sliderT0");
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const resK = document.getElementById("resK");
     const btnPrintReport = document.getElementById("btnPrintReport");
 
-    // Accordion toggles
+    // Accordions
     document.querySelectorAll(".panel-header").forEach(header => {
         header.addEventListener("click", () => {
             let body = header.nextElementSibling;
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Inputs update
+    // Event Listeners for controls
     sliderT0.addEventListener("input", (e) => {
         state.initialTemperature = parseFloat(e.target.value);
         lblT0.textContent = state.initialTemperature;
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     intervalSelect.addEventListener("change", (e) => {
-        state.recordingInterval = parseInt(e.target.value);
+        state.recordingInterval = parseFloat(e.target.value);
         state.nextRecordTime = state.elapsedTimeMinutes + state.recordingInterval;
     });
 
@@ -105,9 +105,19 @@ document.addEventListener("DOMContentLoaded", () => {
         setMaterialConstant();
     });
 
+    liquidSelect.addEventListener("change", (e) => {
+        state.liquid = e.target.value;
+        setLiquidConstant();
+    });
+
     function setMaterialConstant() {
-        const constants = { brass: 0.040, copper: 0.055, aluminium: 0.050, iron: 0.035 };
+        const constants = { brass: 0.040, copper: 0.055, aluminium: 0.050, silver: 0.065, iron: 0.035 };
         state.coolingConstant = constants[state.material] || 0.040;
+    }
+
+    function setLiquidConstant() {
+        const constants = { water: 0.032, oil: 0.025, alcohol: 0.028 };
+        state.coolingConstant = constants[state.liquid] || 0.032;
     }
 
     btnHeat.addEventListener("click", startHeating);
@@ -148,9 +158,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 state.isHeating = false;
                 powerLamp.classList.remove("active");
                 btnHeat.disabled = false;
-                alert("Initial temperature reached. You can now start the experiment.");
+                alert("Initial temperature reached successfully. You can now start the cooling experiment.");
             }
-        }, 60);
+        }, 50);
     }
 
     function startCoolingExperiment() {
@@ -187,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (Math.abs(state.currentTemperature - Ts) < 0.1) {
                 pauseExperiment();
-                alert("Experiment completed. Temperature reached ambient.");
+                alert("Experiment completed. Liquid temperature has reached ambient temperature.");
             }
         }, 100);
     }
@@ -272,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateObservationTable() {
         observationBody.innerHTML = "";
         if (state.observations.length === 0) {
-            observationBody.innerHTML = `<tr class="empty-row"><td colspan="6" class="text-center">No observations recorded yet. Start experiment to generate data.</td></tr>`;
+            observationBody.innerHTML = `<tr class="empty-row"><td colspan="6" class="text-center">No observations recorded yet. Start experiment to generate data automatically.</td></tr>`;
             return;
         }
 
@@ -282,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td><input type="checkbox" class="row-checkbox" data-index="${idx}"></td>
                 <td>${idx + 1}</td>
                 <td>${obs.time}</td>
-                <td><input type="number" class="classic-input" value="${obs.temperature}" data-index="${idx}" style="width:70px;" step="0.1"></td>
+                <td><input type="number" class="classic-input" value="${obs.temperature}" data-index="${idx}" style="width:75px;" step="0.1"></td>
                 <td>${obs.ambient}</td>
                 <td>${obs.diff}</td>
             `;
@@ -321,7 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function exportCSV() {
         if (state.observations.length === 0) {
-            alert("No data available to export.");
+            alert("No observations available to export.");
             return;
         }
         let csv = "S.No,Time(min),Temperature(deg C),AmbientTemp(deg C),TempDiff(deg C)\n";
@@ -342,7 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
             type: 'line',
             data: {
                 datasets: [
-                    { label: 'Experimental Data', data: [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.1)', borderWidth: 2, pointRadius: 4 },
+                    { label: 'Experimental Data Points', data: [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.1)', borderWidth: 2, pointRadius: 4 },
                     { label: 'Theoretical Curve', data: [], borderColor: '#dc2626', borderDash: [5,5], borderWidth: 2, pointRadius: 0 }
                 ]
             },
@@ -350,8 +360,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    x: { type: 'linear', title: { display: true, text: 'Time (minutes)' } },
-                    y: { title: { display: true, text: 'Temperature (°C)' } }
+                    x: { type: 'linear', title: { display: true, text: 'Time t (minutes)' } },
+                    y: { title: { display: true, text: 'Temperature T (°C)' } }
                 }
             }
         });
@@ -392,7 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function autoFillCalculation() {
         if (state.observations.length < 2) {
-            alert("Record at least two observations first.");
+            alert("Record at least two observations in the table first.");
             return;
         }
         let first = state.observations[0];
@@ -413,17 +423,17 @@ document.addEventListener("DOMContentLoaded", () => {
         let t2 = parseFloat(calct2.value);
 
         if (isNaN(T1) || isNaN(T2) || isNaN(Ts) || isNaN(t1) || isNaN(t2)) {
-            alert("Enter valid numbers.");
+            alert("Please enter valid numeric values for calculation.");
             return;
         }
         let dt = t2 - t1;
         if (dt <= 0) {
-            alert("t2 must be greater than t1.");
+            alert("Time t2 must be greater than t1.");
             return;
         }
         let ratio = (T1 - Ts) / (T2 - Ts);
         if (ratio <= 0) {
-            alert("Invalid temperature range.");
+            alert("Invalid temperature range for logarithmic calculation.");
             return;
         }
         let k = (1 / dt) * Math.log(ratio);
@@ -444,10 +454,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Quiz
     const quizData = [
-        { q: "Newton's law of cooling relates rate of cooling to:", options: ["Mass", "Temperature difference", "Volume", "Pressure"], answer: 1 },
-        { q: "What is the theoretical time to reach ambient temperature?", options: ["Finite time", "Infinite time", "Zero time", "10 minutes"], answer: 1 },
-        { q: "Initially cooling rate is:", options: ["Faster", "Slower", "Zero", "Constant"], answer: 0 },
-        { q: "Units of cooling constant k are:", options: ["kg/m3", "Joules", "min^-1", "Kelvin"], answer: 2 }
+        { q: "Newton's law of cooling states that rate of heat loss is proportional to:", options: ["Absolute temperature", "Temperature difference with surroundings", "Volume of body", "Pressure"], answer: 1 },
+        { q: "What is the theoretical time required for a body to reach ambient temperature?", options: ["Finite time", "Infinite time", "Zero time", "Exactly 10 minutes"], answer: 1 },
+        { q: "Initially, the rate of cooling of a hot liquid is:", options: ["Maximum / Fast", "Minimum / Slow", "Zero", "Constant"], answer: 0 },
+        { q: "What are the standard SI-derived units of cooling constant k in this experiment?", options: ["kg/m^3", "Joules", "min^-1", "Kelvin"], answer: 2 }
     ];
 
     function initQuiz() {
@@ -492,7 +502,7 @@ document.addEventListener("DOMContentLoaded", () => {
         initQuiz();
     });
 
-    // Initialization
+    // Initialize
     initChart();
     initQuiz();
     resetExperiment();
